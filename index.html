@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator - CodeAlpha</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 380px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    input, button {
+      margin: 12px 0;
+      padding: 12px;
+      width: 92%;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background: #2575fc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #1a5dd8;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #444;
+    }
+    /* Virtual Keyboard */
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .key {
+      padding: 15px;
+      background: #f2f2f2;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      transition: background 0.2s;
+    }
+    .key:hover {
+      background: #ddd;
+    }
+    .key-wide {
+      grid-column: span 3;
+      background: #ff6666;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Age Calculator</h2>
+    <input type="text" id="dob" placeholder="YYYY-MM-DD (use keyboard)" readonly />
+    <button onclick="calculateAge()">Calculate Age</button>
+    <div id="result"></div>
+
+    <!-- Virtual Keyboard -->
+    <div class="keyboard" id="keyboard">
+      <div class="key" onclick="addKey('0')">0</div>
+      <div class="key" onclick="addKey('1')">1</div>
+      <div class="key" onclick="addKey('2')">2</div>
+      <div class="key" onclick="addKey('3')">3</div>
+      <div class="key" onclick="addKey('4')">4</div>
+      <div class="key" onclick="addKey('5')">5</div>
+      <div class="key" onclick="addKey('6')">6</div>
+      <div class="key" onclick="addKey('7')">7</div>
+      <div class="key" onclick="addKey('8')">8</div>
+      <div class="key" onclick="addKey('9')">9</div>
+      <div class="key" onclick="addKey('-')">-</div>
+      <div class="key-wide" onclick="deleteKey()">⌫ Delete</div>
+    </div>
+  </div>
+
+  <script>
+    function addKey(value) {
+      document.getElementById("dob").value += value;
+    }
+
+    function deleteKey() {
+      let input = document.getElementById("dob");
+      input.value = input.value.slice(0, -1);
+    }
+
+    function calculateAge() {
+      let dob = document.getElementById('dob').value;
+      if (!dob) {
+        document.getElementById('result').innerText = "⚠️ Please enter your date of birth (YYYY-MM-DD).";
+        return;
+      }
+
+      let dobDate = new Date(dob);
+      if (isNaN(dobDate.getTime())) {
+        document.getElementById('result').innerText = "⚠️ Invalid format! Use YYYY-MM-DD.";
+        return;
+      }
+
+      let today = new Date();
+      if (dobDate > today) {
+        document.getElementById('result').innerText = "⚠️ Future DOB not allowed!";
+        return;
+      }
+
+      let years = today.getFullYear() - dobDate.getFullYear();
+      let months = today.getMonth() - dobDate.getMonth();
+      let days = today.getDate() - dobDate.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      document.getElementById('result').innerText = 
+        `🎉 Your Age: ${years} Years, ${months} Months, ${days} Days`;
+    }
+  </script>
+</body>
+</html>
